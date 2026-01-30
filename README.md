@@ -148,7 +148,7 @@ git push
 
 ## Step 8: Get latest courses and updates (pull from upstream)
 
-When the course team adds new challenges or fixes and you want to **take all their changes** (and overwrite your copy where there are conflicts):
+When the course team adds new challenges or fixes and you want to **take all their changes** and **overwrite your copy** wherever there are conflicts, use the sync-upstream script.
 
 **Option A – One command (recommended):**
 
@@ -156,11 +156,11 @@ When the course team adds new challenges or fixes and you want to **take all the
 npm run sync-upstream
 ```
 
-This will:
+This script:
 
-1. Save your current work in a commit (if you have uncommitted changes).
-2. Fetch and merge from upstream.
-3. On conflicts, **accept upstream’s version** (your conflicting changes are replaced).
+1. Saves your current work in a commit (if you have uncommitted changes).
+2. Fetches and merges from upstream.
+3. On any conflict, **accepts upstream’s version** — your conflicting changes are **overwritten** by the course repo’s version. Use this when you want to always take the course team’s updates.
 
 Then push to your repo if you want:
 
@@ -197,7 +197,7 @@ npm run setup
 | Start a course app         | `cd courses/01-react-fundamentals/project && npm run dev` |
 | Run review for one challenge | `npm run review -- --challenge=01-user-profile` (from course project) |
 | Push your work             | `git add . && git commit -m "..." && git push origin main` |
-| Get latest from course repo | `npm run sync-upstream` |
+| Get latest from course repo (merge and overwrite conflicts with upstream) | `npm run sync-upstream` |
 
 ---
 
