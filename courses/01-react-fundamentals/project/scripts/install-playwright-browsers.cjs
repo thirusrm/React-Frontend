@@ -15,4 +15,8 @@ try {
   });
 } catch (_) {
   // Do not fail npm install; user can run: npm run setup:e2e
+  console.warn(
+    '\n⚠️  Could not install Playwright browser (network or permission).\n' +
+    '   To run E2E tests and reviews later, run: npm run setup:e2e\n'
+  );
 }
