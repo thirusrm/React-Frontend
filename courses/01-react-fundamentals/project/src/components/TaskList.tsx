@@ -45,13 +45,12 @@ const HARDCODED_TASKS: Task[] = [
 
 export default function TaskList(props: TaskListProps) {
   const taskList = props.tasks ?? HARDCODED_TASKS
-  const countText = props.countText
 
   return (
     <>
-      {countText && (
+      {props.countText && (
         <div id="task-count">
-          {countText}
+          {props.countText}
         </div>
       )}
 
@@ -59,9 +58,12 @@ export default function TaskList(props: TaskListProps) {
         {taskList.map((task) => (
           <TaskCard
             key={task.id}
+            taskId={task.id}
             title={task.title}
             description={task.description}
             priority={task.priority}
+            completed={task.completed}
+            onToggle={props.onToggle}
           />
         ))}
       </section>

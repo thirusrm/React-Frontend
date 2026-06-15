@@ -16,7 +16,15 @@ interface TaskAppProps {
 
 export default function TaskApp(props: TaskAppProps) {
   const tasks = props.tasks ?? []
-  const taskCountText = `${tasks.length} Tasks`
+
+  const completedTasks = tasks.filter(
+    (task) => task.completed,
+  ).length
+
+  const taskCountText =
+    props.countFormat === 'completed'
+      ? `${completedTasks} of ${tasks.length} completed`
+      : `${tasks.length} Tasks`
 
   const handleAddTask = (newTask: Task) => {
     if (props.setTasks) {
@@ -24,6 +32,21 @@ export default function TaskApp(props: TaskAppProps) {
         ...previousTasks,
         newTask,
       ])
+    }
+  }
+
+  const handleToggleTask = (taskId: string | number) => {
+    if (props.setTasks) {
+      props.setTasks((previousTasks) =>
+        previousTasks.map((task) =>
+          task.id === taskId
+            ? {
+                ...task,
+                completed: !task.completed,
+              }
+            : task,
+        ),
+      )
     }
   }
 
@@ -36,6 +59,7 @@ export default function TaskApp(props: TaskAppProps) {
       <TaskList
         tasks={tasks}
         countText={taskCountText}
+        onToggle={handleToggleTask}
       />
     </main>
   )
