@@ -67,5 +67,28 @@
       "maintainability": 90,
       "overall": "The code is well-structured and follows good practices, but there are some areas for improvement to make it more robust and maintainable."
     }
+  },
+  {
+    "challengeId": "04-task-completion-toggle",
+    "challengeName": "Task Completion Toggle",
+    "aiReview": {
+      "challengeId": "04-task-completion-toggle",
+      "timestamp": "2026-06-15T14:10:11.168Z",
+      "score": 88,
+      "feedback": [],
+      "strengths": [
+        "The code is well-structured and follows a consistent naming convention.",
+        "The use of TypeScript and functional components is a good practice.",
+        "The code is well-commented and easy to understand."
+      ],
+      "improvements": [
+        "In the TaskCard component, the `onToggle` function is called with `taskId ?? 0` when the checkbox is clicked. This can be simplified to just `onToggle(taskId)`, as `taskId` will be undefined when the component is rendered without an `onToggle` prop. This can cause an error if `onToggle` is not provided.",
+        "In the TaskList component, the `countText` prop is not used consistently. Sometimes it's used as a string, and sometimes it's used as a variable. It would be better to use a consistent approach throughout the component.",
+        "In the App component, the `INITIAL_TASKS` array is defined with a mix of string and number types for the `id` property. It would be better to use a consistent type throughout the array."
+      ],
+      "readability": 85,
+      "maintainability": 90,
+      "overall": "The code is well-structured and follows good practices, but there are a few areas that can be improved for better maintainability and readability."
+    }
   }
 ]
