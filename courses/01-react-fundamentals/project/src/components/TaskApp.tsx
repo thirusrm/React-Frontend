@@ -50,6 +50,16 @@ export default function TaskApp(props: TaskAppProps) {
     }
   }
 
+  const handleDeleteTask = (taskId: string | number) => {
+    if (props.setTasks) {
+      props.setTasks((previousTasks) =>
+        previousTasks.filter(
+          (task) => task.id !== taskId,
+        ),
+      )
+    }
+  }
+
   return (
     <main>
       {props.showForm && (
@@ -60,6 +70,7 @@ export default function TaskApp(props: TaskAppProps) {
         tasks={tasks}
         countText={taskCountText}
         onToggle={handleToggleTask}
+        onDelete={props.onDelete ? handleDeleteTask : undefined}
       />
     </main>
   )

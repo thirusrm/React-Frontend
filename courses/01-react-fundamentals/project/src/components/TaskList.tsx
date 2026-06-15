@@ -64,6 +64,7 @@ export default function TaskList(props: TaskListProps) {
             priority={task.priority}
             completed={task.completed}
             onToggle={props.onToggle}
+            onDelete={props.onDelete}
           />
         ))}
       </section>
