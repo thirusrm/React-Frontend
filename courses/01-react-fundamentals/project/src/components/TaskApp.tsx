@@ -33,6 +33,9 @@ export default function TaskApp(props: TaskAppProps) {
   const [sortOrder, setSortOrder] =
     useState<SortType>('recent')
 
+  const [searchText, setSearchText] =
+    useState('')
+
   const [editingId, setEditingId] =
     useState<string | number | null>(
       null,
@@ -101,6 +104,23 @@ export default function TaskApp(props: TaskAppProps) {
         ? tasks.filter((task) => task.completed)
         : tasks
 
+  const searchedTasks =
+    searchText.trim() === ''
+      ? filteredTasks
+      : filteredTasks.filter(
+          (task) =>
+            task.title
+              .toLowerCase()
+              .includes(
+                searchText.toLowerCase(),
+              ) ||
+            task.description
+              .toLowerCase()
+              .includes(
+                searchText.toLowerCase(),
+              ),
+        )
+
   const priorityValue = (
     priority: string,
   ): number => {
@@ -109,7 +129,7 @@ export default function TaskApp(props: TaskAppProps) {
     return 1
   }
 
-  const sortedTasks = [...filteredTasks]
+  const sortedTasks = [...searchedTasks]
 
   if (sortOrder === 'priority-high') {
     sortedTasks.sort(
@@ -153,11 +173,16 @@ export default function TaskApp(props: TaskAppProps) {
         <FilterBar
           filter={filter}
           sortOrder={sortOrder}
+          searchText={searchText}
           onFilterChange={setFilter}
           onSortChange={(value) =>
             setSortOrder(
               value as SortType,
             )
+          }
+          onSearchChange={setSearchText}
+          onClearSearch={() =>
+            setSearchText('')
           }
         />
       )}
@@ -169,7 +194,7 @@ export default function TaskApp(props: TaskAppProps) {
           </div>
 
           <div id="filter-empty-message">
-            No tasks match this filter
+            No tasks found
           </div>
         </>
       ) : (
