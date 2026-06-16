@@ -136,5 +136,28 @@
       "maintainability": 90,
       "overall": "The code is well-organized and follows good practices, but could benefit from some refactoring and additional type annotations to improve maintainability and readability."
     }
+  },
+  {
+    "challengeId": "07-priority-based-sorting",
+    "challengeName": "Priority-Based Sorting",
+    "aiReview": {
+      "challengeId": "07-priority-based-sorting",
+      "timestamp": "2026-06-16T05:37:01.984Z",
+      "score": 88,
+      "feedback": [],
+      "strengths": [
+        "The code is well-structured and easy to follow, with clear separation of concerns between components.",
+        "The use of TypeScript and functional components is a good practice.",
+        "The code is well-documented with clear and concise comments."
+      ],
+      "improvements": [
+        "Some of the variable names could be more descriptive, such as `filter` and `sortOrder` in the `TaskApp` component.",
+        "The sorting logic in the `TaskApp` component could be extracted into a separate function for better readability and maintainability.",
+        "The use of `window.confirm` in the `handleDelete` function is not ideal, as it can cause issues with accessibility and should be replaced with a more robust solution."
+      ],
+      "readability": 85,
+      "maintainability": 90,
+      "overall": "The code is well-structured and maintainable, with some minor improvements needed to make it even better. The use of TypeScript and functional components is a good practice, and the code is well-documented. However, there are some areas where the code could be improved, such as more descriptive variable names and a more robust solution for deleting tasks."
+    }
   }
 ]
