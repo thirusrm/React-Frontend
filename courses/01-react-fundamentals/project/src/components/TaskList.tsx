@@ -16,6 +16,14 @@ interface TaskListProps {
   countText?: string
   onToggle?: (id: string | number) => void
   onDelete?: (id: string | number) => void
+  onUpdateTask?: (
+    id: string | number,
+    updates: Partial<Task>,
+  ) => void
+  editingId?: string | number | null
+  setEditingId?: (
+    id: string | number | null,
+  ) => void
   linkToTaskDetail?: boolean
 }
 
@@ -65,6 +73,13 @@ export default function TaskList(props: TaskListProps) {
             completed={task.completed}
             onToggle={props.onToggle}
             onDelete={props.onDelete}
+            onUpdateTask={props.onUpdateTask}
+            isEditing={
+              props.editingId === task.id
+            }
+            setEditingId={
+              props.setEditingId
+            }
           />
         ))}
       </section>
