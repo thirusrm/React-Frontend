@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import FilterBar from './FilterBar'
 import TaskForm from './TaskForm'
@@ -36,10 +36,33 @@ export default function TaskApp(props: TaskAppProps) {
   const [searchText, setSearchText] =
     useState('')
 
+  const [
+    debouncedSearchText,
+    setDebouncedSearchText,
+  ] = useState('')
+
+  const [isSearching, setIsSearching] =
+    useState(false)
+
   const [editingId, setEditingId] =
     useState<string | number | null>(
       null,
     )
+
+  useEffect(() => {
+    if (searchText !== debouncedSearchText) {
+      setIsSearching(true)
+    }
+
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchText(searchText)
+      setIsSearching(false)
+    }, 300)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [searchText, debouncedSearchText])
 
   const completedTasks = tasks.filter(
     (task) => task.completed,
@@ -54,7 +77,9 @@ export default function TaskApp(props: TaskAppProps) {
     }
   }
 
-  const handleToggleTask = (taskId: string | number) => {
+  const handleToggleTask = (
+    taskId: string | number,
+  ) => {
     if (props.setTasks) {
       props.setTasks((previousTasks) =>
         previousTasks.map((task) =>
@@ -69,7 +94,9 @@ export default function TaskApp(props: TaskAppProps) {
     }
   }
 
-  const handleDeleteTask = (taskId: string | number) => {
+  const handleDeleteTask = (
+    taskId: string | number,
+  ) => {
     if (props.setTasks) {
       props.setTasks((previousTasks) =>
         previousTasks.filter(
@@ -99,25 +126,29 @@ export default function TaskApp(props: TaskAppProps) {
 
   const filteredTasks =
     filter === 'active'
-      ? tasks.filter((task) => !task.completed)
+      ? tasks.filter(
+          (task) => !task.completed,
+        )
       : filter === 'completed'
-        ? tasks.filter((task) => task.completed)
+        ? tasks.filter(
+            (task) => task.completed,
+          )
         : tasks
 
   const searchedTasks =
-    searchText.trim() === ''
+    debouncedSearchText.trim() === ''
       ? filteredTasks
       : filteredTasks.filter(
           (task) =>
             task.title
               .toLowerCase()
               .includes(
-                searchText.toLowerCase(),
+                debouncedSearchText.toLowerCase(),
               ) ||
             task.description
               .toLowerCase()
               .includes(
-                searchText.toLowerCase(),
+                debouncedSearchText.toLowerCase(),
               ),
         )
 
@@ -143,7 +174,9 @@ export default function TaskApp(props: TaskAppProps) {
         priorityValue(a.priority) -
         priorityValue(b.priority),
     )
-  } else if (sortOrder === 'alphabetical') {
+  } else if (
+    sortOrder === 'alphabetical'
+  ) {
     sortedTasks.sort((a, b) =>
       a.title
         .toLowerCase()
@@ -157,7 +190,9 @@ export default function TaskApp(props: TaskAppProps) {
 
   if (props.showFilterBar) {
     taskCountText = `Showing ${sortedTasks.length} of ${tasks.length} tasks`
-  } else if (props.countFormat === 'completed') {
+  } else if (
+    props.countFormat === 'completed'
+  ) {
     taskCountText = `${completedTasks} of ${tasks.length} completed`
   } else {
     taskCountText = `${tasks.length} Tasks`
@@ -185,6 +220,12 @@ export default function TaskApp(props: TaskAppProps) {
             setSearchText('')
           }
         />
+      )}
+
+      {isSearching && (
+        <div id="searching-indicator">
+          Searching...
+        </div>
       )}
 
       {sortedTasks.length === 0 ? (
