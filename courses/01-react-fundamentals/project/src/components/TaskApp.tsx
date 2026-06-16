@@ -18,11 +18,20 @@ interface TaskAppProps {
 
 type FilterType = 'all' | 'active' | 'completed'
 
+type SortType =
+  | 'recent'
+  | 'priority-high'
+  | 'priority-low'
+  | 'alphabetical'
+
 export default function TaskApp(props: TaskAppProps) {
   const tasks = props.tasks ?? []
 
   const [filter, setFilter] =
     useState<FilterType>('all')
+
+  const [sortOrder, setSortOrder] =
+    useState<SortType>('recent')
 
   const completedTasks = tasks.filter(
     (task) => task.completed,
@@ -69,10 +78,42 @@ export default function TaskApp(props: TaskAppProps) {
         ? tasks.filter((task) => task.completed)
         : tasks
 
+  const priorityValue = (
+    priority: string,
+  ): number => {
+    if (priority === 'High') return 3
+    if (priority === 'Medium') return 2
+    return 1
+  }
+
+  const sortedTasks = [...filteredTasks]
+
+  if (sortOrder === 'priority-high') {
+    sortedTasks.sort(
+      (a, b) =>
+        priorityValue(b.priority) -
+        priorityValue(a.priority),
+    )
+  } else if (sortOrder === 'priority-low') {
+    sortedTasks.sort(
+      (a, b) =>
+        priorityValue(a.priority) -
+        priorityValue(b.priority),
+    )
+  } else if (sortOrder === 'alphabetical') {
+    sortedTasks.sort((a, b) =>
+      a.title
+        .toLowerCase()
+        .localeCompare(
+          b.title.toLowerCase(),
+        ),
+    )
+  }
+
   let taskCountText = ''
 
   if (props.showFilterBar) {
-    taskCountText = `Showing ${filteredTasks.length} of ${tasks.length} tasks`
+    taskCountText = `Showing ${sortedTasks.length} of ${tasks.length} tasks`
   } else if (props.countFormat === 'completed') {
     taskCountText = `${completedTasks} of ${tasks.length} completed`
   } else {
@@ -88,11 +129,17 @@ export default function TaskApp(props: TaskAppProps) {
       {props.showFilterBar && (
         <FilterBar
           filter={filter}
+          sortOrder={sortOrder}
           onFilterChange={setFilter}
+          onSortChange={(value) =>
+            setSortOrder(
+              value as SortType,
+            )
+          }
         />
       )}
 
-      {filteredTasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
         <>
           <div id="task-count">
             {taskCountText}
@@ -104,7 +151,7 @@ export default function TaskApp(props: TaskAppProps) {
         </>
       ) : (
         <TaskList
-          tasks={filteredTasks}
+          tasks={sortedTasks}
           countText={taskCountText}
           onToggle={handleToggleTask}
           onDelete={
