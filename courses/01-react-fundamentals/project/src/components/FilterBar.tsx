@@ -2,6 +2,9 @@ interface FilterBarProps {
   filter: 'all' | 'active' | 'completed'
   sortOrder?: string
   searchText?: string
+  categories?: string[]
+  selectedCategory?: string
+  onCategoryChange?: (category: string) => void
   onFilterChange?: (
     filter: 'all' | 'active' | 'completed',
   ) => void
@@ -14,6 +17,9 @@ export default function FilterBar({
   filter,
   sortOrder = 'recent',
   searchText = '',
+  categories = [],
+  selectedCategory = 'all',
+  onCategoryChange = () => {},
   onFilterChange = () => {},
   onSortChange = () => {},
   onSearchChange = () => {},
@@ -60,6 +66,27 @@ export default function FilterBar({
           Clear search
         </button>
       )}
+
+      <select
+        id="category-filter"
+        value={selectedCategory}
+        onChange={(event) =>
+          onCategoryChange(
+            event.target.value,
+          )
+        }
+      >
+        {categories.map((category) => (
+          <option
+            key={category}
+            value={category}
+          >
+            {category === 'all'
+              ? 'All categories'
+              : category}
+          </option>
+        ))}
+      </select>
 
       <select
         id="sort-order"

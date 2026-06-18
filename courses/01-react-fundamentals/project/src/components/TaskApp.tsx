@@ -7,7 +7,10 @@ import TaskList, { type Task } from './TaskList'
 interface TaskAppProps {
   tasks?: Task[]
   setTasks?: Dispatch<SetStateAction<Task[]>>
-  dispatch?: (action: { type: string; payload?: unknown }) => void
+  dispatch?: (action: {
+    type: string
+    payload?: unknown
+  }) => void
   showForm?: boolean
   countFormat?: string
   showFilterBar?: boolean
@@ -16,7 +19,10 @@ interface TaskAppProps {
   linkToTaskDetail?: boolean
 }
 
-type FilterType = 'all' | 'active' | 'completed'
+type FilterType =
+  | 'all'
+  | 'active'
+  | 'completed'
 
 type SortType =
   | 'recent'
@@ -24,11 +30,16 @@ type SortType =
   | 'priority-low'
   | 'alphabetical'
 
-export default function TaskApp(props: TaskAppProps) {
+export default function TaskApp(
+  props: TaskAppProps,
+) {
   const tasks = props.tasks ?? []
 
   const [filter, setFilter] =
     useState<FilterType>('all')
+
+  const [selectedCategory, setSelectedCategory] =
+    useState('all')
 
   const [sortOrder, setSortOrder] =
     useState<SortType>('recent')
@@ -68,11 +79,31 @@ export default function TaskApp(props: TaskAppProps) {
     (task) => task.completed,
   ).length
 
-  const handleAddTask = (newTask: Task) => {
+  const categories = [
+    'all',
+    ...new Set(
+      tasks.map(
+        (task) =>
+          task.category ?? 'General',
+      ),
+    ),
+  ]
+
+  const handleAddTask = (
+    newTask: Task,
+  ) => {
+    const taskWithDefaults: Task = {
+      ...newTask,
+      category:
+        newTask.category ??
+        'General',
+      tags: newTask.tags ?? [],
+    }
+
     if (props.setTasks) {
       props.setTasks((previousTasks) => [
         ...previousTasks,
-        newTask,
+        taskWithDefaults,
       ])
     }
   }
@@ -86,7 +117,8 @@ export default function TaskApp(props: TaskAppProps) {
           task.id === taskId
             ? {
                 ...task,
-                completed: !task.completed,
+                completed:
+                  !task.completed,
               }
             : task,
         ),
@@ -100,7 +132,8 @@ export default function TaskApp(props: TaskAppProps) {
     if (props.setTasks) {
       props.setTasks((previousTasks) =>
         previousTasks.filter(
-          (task) => task.id !== taskId,
+          (task) =>
+            task.id !== taskId,
         ),
       )
     }
@@ -127,18 +160,30 @@ export default function TaskApp(props: TaskAppProps) {
   const filteredTasks =
     filter === 'active'
       ? tasks.filter(
-          (task) => !task.completed,
+          (task) =>
+            !task.completed,
         )
       : filter === 'completed'
         ? tasks.filter(
-            (task) => task.completed,
+            (task) =>
+              task.completed,
           )
         : tasks
 
-  const searchedTasks =
-    debouncedSearchText.trim() === ''
+  const categoryFilteredTasks =
+    selectedCategory === 'all'
       ? filteredTasks
       : filteredTasks.filter(
+          (task) =>
+            (task.category ??
+              'General') ===
+            selectedCategory,
+        )
+
+  const searchedTasks =
+    debouncedSearchText.trim() === ''
+      ? categoryFilteredTasks
+      : categoryFilteredTasks.filter(
           (task) =>
             task.title
               .toLowerCase()
@@ -160,18 +205,26 @@ export default function TaskApp(props: TaskAppProps) {
     return 1
   }
 
-  const sortedTasks = [...searchedTasks]
+  const sortedTasks = [
+    ...searchedTasks,
+  ]
 
   if (sortOrder === 'priority-high') {
     sortedTasks.sort(
       (a, b) =>
-        priorityValue(b.priority) -
+        priorityValue(
+          b.priority,
+        ) -
         priorityValue(a.priority),
     )
-  } else if (sortOrder === 'priority-low') {
+  } else if (
+    sortOrder === 'priority-low'
+  ) {
     sortedTasks.sort(
       (a, b) =>
-        priorityValue(a.priority) -
+        priorityValue(
+          a.priority,
+        ) -
         priorityValue(b.priority),
     )
   } else if (
@@ -191,7 +244,8 @@ export default function TaskApp(props: TaskAppProps) {
   if (props.showFilterBar) {
     taskCountText = `Showing ${sortedTasks.length} of ${tasks.length} tasks`
   } else if (
-    props.countFormat === 'completed'
+    props.countFormat ===
+    'completed'
   ) {
     taskCountText = `${completedTasks} of ${tasks.length} completed`
   } else {
@@ -201,7 +255,9 @@ export default function TaskApp(props: TaskAppProps) {
   return (
     <main>
       {props.showForm && (
-        <TaskForm onAddTask={handleAddTask} />
+        <TaskForm
+          onAddTask={handleAddTask}
+        />
       )}
 
       {props.showFilterBar && (
@@ -209,13 +265,22 @@ export default function TaskApp(props: TaskAppProps) {
           filter={filter}
           sortOrder={sortOrder}
           searchText={searchText}
+          categories={categories}
+          selectedCategory={
+            selectedCategory
+          }
+          onCategoryChange={
+            setSelectedCategory
+          }
           onFilterChange={setFilter}
           onSortChange={(value) =>
             setSortOrder(
               value as SortType,
             )
           }
-          onSearchChange={setSearchText}
+          onSearchChange={
+            setSearchText
+          }
           onClearSearch={() =>
             setSearchText('')
           }
@@ -242,15 +307,21 @@ export default function TaskApp(props: TaskAppProps) {
         <TaskList
           tasks={sortedTasks}
           countText={taskCountText}
-          onToggle={handleToggleTask}
+          onToggle={
+            handleToggleTask
+          }
           onDelete={
             props.onDelete
               ? handleDeleteTask
               : undefined
           }
-          onUpdateTask={handleUpdateTask}
+          onUpdateTask={
+            handleUpdateTask
+          }
           editingId={editingId}
-          setEditingId={setEditingId}
+          setEditingId={
+            setEditingId
+          }
         />
       )}
     </main>

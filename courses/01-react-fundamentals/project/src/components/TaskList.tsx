@@ -34,6 +34,8 @@ const HARDCODED_TASKS: Task[] = [
     description: 'First hardcoded task',
     priority: 'High',
     completed: false,
+    category: 'General',
+    tags: [],
   },
   {
     id: 2,
@@ -41,6 +43,8 @@ const HARDCODED_TASKS: Task[] = [
     description: 'Second hardcoded task',
     priority: 'Medium',
     completed: false,
+    category: 'Work',
+    tags: ['office'],
   },
   {
     id: 3,
@@ -48,11 +52,14 @@ const HARDCODED_TASKS: Task[] = [
     description: 'Third hardcoded task',
     priority: 'Low',
     completed: false,
+    category: 'Personal',
+    tags: ['home'],
   },
 ]
 
 export default function TaskList(props: TaskListProps) {
-  const taskList = props.tasks ?? HARDCODED_TASKS
+  const taskList =
+    props.tasks ?? HARDCODED_TASKS
 
   return (
     <>
@@ -70,6 +77,8 @@ export default function TaskList(props: TaskListProps) {
             title={task.title}
             description={task.description}
             priority={task.priority}
+            category={task.category}
+            tags={task.tags}
             completed={task.completed}
             onToggle={props.onToggle}
             onDelete={props.onDelete}
