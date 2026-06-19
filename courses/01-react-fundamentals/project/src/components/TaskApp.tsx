@@ -3,6 +3,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import FilterBar from './FilterBar'
 import TaskForm from './TaskForm'
 import TaskList, { type Task } from './TaskList'
+import StatsPanel from './StatsPanel'
 
 interface TaskAppProps {
   tasks?: Task[]
@@ -96,8 +97,7 @@ export default function TaskApp(
     const taskWithDefaults: Task = {
       ...newTask,
       category:
-        newTask.category ??
-        'General',
+        newTask.category ?? 'General',
       tags: newTask.tags ?? [],
       dueDate: newTask.dueDate,
     }
@@ -325,6 +325,27 @@ export default function TaskApp(
         <div id="searching-indicator">
           Searching...
         </div>
+      )}
+
+      {props.showStatsPanel && (
+        <StatsPanel
+          total={tasks.length}
+          completed={completedTasks}
+          active={
+            tasks.length -
+            completedTasks
+          }
+          overdue={
+            tasks.filter(
+              (task) =>
+                !task.completed &&
+                task.dueDate &&
+                new Date(
+                  task.dueDate,
+                ) < new Date(),
+            ).length
+          }
+        />
       )}
 
       {sortedTasks.length === 0 ? (
