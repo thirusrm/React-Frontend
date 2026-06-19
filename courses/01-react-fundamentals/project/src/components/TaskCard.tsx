@@ -8,6 +8,7 @@ interface TaskCardProps {
   priority: string
   category?: string
   tags?: string[]
+  dueDate?: string | number
   completed?: boolean
   onToggle?: (id: string | number) => void
   onDelete?: (id: string | number) => void
@@ -33,6 +34,7 @@ export default function TaskCard({
   priority,
   category,
   tags,
+  dueDate,
   completed = false,
   onToggle,
   onDelete,
@@ -90,6 +92,42 @@ export default function TaskCard({
     setEditingId?.(null)
   }
 
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const due =
+    dueDate !== undefined
+      ? new Date(dueDate)
+      : null
+
+  let dueLabel = ''
+
+  if (due) {
+    const dueCopy = new Date(due)
+    dueCopy.setHours(0, 0, 0, 0)
+
+    const difference =
+      Math.ceil(
+        (dueCopy.getTime() -
+          today.getTime()) /
+          (1000 * 60 * 60 * 24),
+      )
+
+    if (
+      difference < 0 &&
+      !completed
+    ) {
+      dueLabel = 'Overdue'
+    } else if (difference === 0) {
+      dueLabel = 'Due Today'
+    } else if (difference <= 3) {
+      dueLabel = 'Due Soon'
+    }
+  }
+
+  const isOverdue =
+    dueLabel === 'Overdue'
+
   if (isEditing) {
     return (
       <article id="task-card">
@@ -145,10 +183,13 @@ export default function TaskCard({
     <article
       id="task-card"
       data-completed={completed}
+      data-overdue={isOverdue}
       style={{
-        backgroundColor: completed
-          ? '#f0f0f0'
-          : 'white',
+        backgroundColor: isOverdue
+          ? '#ffe5e5'
+          : completed
+            ? '#f0f0f0'
+            : 'white',
       }}
     >
       {onToggle && (
@@ -201,6 +242,15 @@ export default function TaskCard({
           </span>
         ))}
       </div>
+
+      {due && (
+        <p id="task-due-date">
+          Due:{' '}
+          {due.toLocaleDateString()}
+          {dueLabel &&
+            ` (${dueLabel})`}
+        </p>
+      )}
 
       {onUpdateTask && (
         <button

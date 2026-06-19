@@ -29,6 +29,7 @@ type SortType =
   | 'priority-high'
   | 'priority-low'
   | 'alphabetical'
+  | 'due-date'
 
 export default function TaskApp(
   props: TaskAppProps,
@@ -98,6 +99,7 @@ export default function TaskApp(
         newTask.category ??
         'General',
       tags: newTask.tags ?? [],
+      dueDate: newTask.dueDate,
     }
 
     if (props.setTasks) {
@@ -215,7 +217,9 @@ export default function TaskApp(
         priorityValue(
           b.priority,
         ) -
-        priorityValue(a.priority),
+        priorityValue(
+          a.priority,
+        ),
     )
   } else if (
     sortOrder === 'priority-low'
@@ -225,7 +229,9 @@ export default function TaskApp(
         priorityValue(
           a.priority,
         ) -
-        priorityValue(b.priority),
+        priorityValue(
+          b.priority,
+        ),
     )
   } else if (
     sortOrder === 'alphabetical'
@@ -237,6 +243,34 @@ export default function TaskApp(
           b.title.toLowerCase(),
         ),
     )
+  } else if (
+    sortOrder === 'due-date'
+  ) {
+    sortedTasks.sort((a, b) => {
+      if (
+        !a.dueDate &&
+        !b.dueDate
+      ) {
+        return 0
+      }
+
+      if (!a.dueDate) {
+        return 1
+      }
+
+      if (!b.dueDate) {
+        return -1
+      }
+
+      return (
+        new Date(
+          a.dueDate,
+        ).getTime() -
+        new Date(
+          b.dueDate,
+        ).getTime()
+      )
+    })
   }
 
   let taskCountText = ''

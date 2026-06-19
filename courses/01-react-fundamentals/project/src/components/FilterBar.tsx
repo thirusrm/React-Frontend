@@ -71,9 +71,7 @@ export default function FilterBar({
         id="category-filter"
         value={selectedCategory}
         onChange={(event) =>
-          onCategoryChange(
-            event.target.value,
-          )
+          onCategoryChange(event.target.value)
         }
       >
         {categories.map((category) => (
@@ -109,6 +107,10 @@ export default function FilterBar({
 
         <option value="alphabetical">
           Alphabetical
+        </option>
+
+        <option value="due-date">
+          Due Date (Soonest First)
         </option>
       </select>
     </div>
