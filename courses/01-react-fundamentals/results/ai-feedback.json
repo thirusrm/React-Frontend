@@ -389,5 +389,28 @@
       "maintainability": 90,
       "overall": "The code is well-structured and effectively uses React hooks and context API. However, there are a few areas that can be improved for better maintainability and error handling."
     }
+  },
+  {
+    "challengeId": "18-usereducer-complex-state",
+    "challengeName": "useReducer - Complex State Management",
+    "aiReview": {
+      "challengeId": "18-usereducer-complex-state",
+      "timestamp": "2026-06-22T06:55:18.321Z",
+      "score": 83,
+      "feedback": [],
+      "strengths": [
+        "The use of TypeScript and functional components is a good practice.",
+        "The reducer function is well-structured and easy to understand.",
+        "The code is well-organized and follows a consistent naming convention."
+      ],
+      "improvements": [
+        "Some of the functions in the TaskApp component are quite long and complex. Consider breaking them down into smaller functions to improve readability.",
+        "The use of `setTimeout` in the TaskApp component can be replaced with a more modern approach using `useCallback` and `useEffect`.",
+        "The reducer function could benefit from additional error handling and edge cases."
+      ],
+      "readability": 80,
+      "maintainability": 85,
+      "overall": "The code is well-structured and follows good practices, but there are some areas for improvement to make it even more maintainable and efficient."
+    }
   }
 ]
