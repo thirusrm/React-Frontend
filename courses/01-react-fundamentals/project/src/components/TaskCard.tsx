@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface TaskCardProps {
   id?: string | number
@@ -26,7 +26,7 @@ interface TaskCardProps {
   ) => void
 }
 
-export default function TaskCard({
+function TaskCard({
   id,
   taskId,
   title,
@@ -272,3 +272,5 @@ export default function TaskCard({
     </article>
   )
 }
+
+export default React.memo(TaskCard)

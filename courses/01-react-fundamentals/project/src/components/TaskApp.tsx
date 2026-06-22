@@ -1,4 +1,9 @@
-import { useEffect, useState } from 'react'
+import {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from 'react'
 import FilterBar from './FilterBar'
 import TaskForm from './TaskForm'
 import TaskList, { type Task } from './TaskList'
@@ -42,7 +47,17 @@ type SortType =
 export default function TaskApp(
   props: TaskAppProps,
 ) {
-  const tasks = props.tasks ?? []
+  const {
+    tasks: taskProps = [],
+    dispatch,
+    showForm,
+    countFormat,
+    showFilterBar,
+    showStatsPanel,
+    onDelete,
+  } = props
+
+  const tasks = taskProps
 
   const { theme } = useTheme()
 
@@ -100,93 +115,59 @@ export default function TaskApp(
     ),
   ]
 
-  const handleAddTask = (
-    newTask: Task,
-  ) => {
-    const taskWithDefaults: Task = {
-      ...newTask,
-      category:
-        newTask.category ?? 'General',
-      tags: newTask.tags ?? [],
-      dueDate: newTask.dueDate,
-    }
+  const handleAddTask = useCallback(
+    (newTask: Task) => {
+      const taskWithDefaults: Task = {
+        ...newTask,
+        category:
+          newTask.category ?? 'General',
+        tags: newTask.tags ?? [],
+        dueDate: newTask.dueDate,
+      }
 
-    props.dispatch?.({
-      type: ADD_TASK,
-      payload: taskWithDefaults,
-    })
-  }
+      dispatch?.({
+        type: ADD_TASK,
+        payload: taskWithDefaults,
+      })
+    },
+    [dispatch],
+  )
 
-  const handleToggleTask = (
-    taskId: string | number,
-  ) => {
-    props.dispatch?.({
-      type: TOGGLE_TASK,
-      payload: taskId,
-    })
-  }
+  const handleToggleTask = useCallback(
+    (taskId: string | number) => {
+      dispatch?.({
+        type: TOGGLE_TASK,
+        payload: taskId,
+      })
+    },
+    [dispatch],
+  )
 
-  const handleDeleteTask = (
-    taskId: string | number,
-  ) => {
-    props.dispatch?.({
-      type: DELETE_TASK,
-      payload: taskId,
-    })
-  }
+  const handleDeleteTask = useCallback(
+    (taskId: string | number) => {
+      dispatch?.({
+        type: DELETE_TASK,
+        payload: taskId,
+      })
+    },
+    [dispatch],
+  )
 
-  const handleUpdateTask = (
-    taskId: string | number,
-    updates: Partial<Task>,
-  ) => {
-    props.dispatch?.({
-      type: UPDATE_TASK,
-      payload: {
-        id: taskId,
-        updates,
-      },
-    })
-  }
-
-  const filteredTasks =
-    filter === 'active'
-      ? tasks.filter(
-          (task) =>
-            !task.completed,
-        )
-      : filter === 'completed'
-        ? tasks.filter(
-            (task) =>
-              task.completed,
-          )
-        : tasks
-
-  const categoryFilteredTasks =
-    selectedCategory === 'all'
-      ? filteredTasks
-      : filteredTasks.filter(
-          (task) =>
-            (task.category ??
-              'General') ===
-            selectedCategory,
-        )
-
-  const searchedTasks =
-    debouncedSearchText.trim() === ''
-      ? categoryFilteredTasks
-      : categoryFilteredTasks.filter(
-          (task) =>
-            task.title
-              .toLowerCase()
-              .includes(
-                debouncedSearchText.toLowerCase(),
-              ) ||
-            task.description
-              .toLowerCase()
-              .includes(
-                debouncedSearchText.toLowerCase(),
-              ),
-        )
+  const handleUpdateTask = useCallback(
+    (
+      taskId: string | number,
+      updates: Partial<Task>,
+    ) => {
+      dispatch?.({
+        type: UPDATE_TASK,
+        payload: {
+          id: taskId,
+          updates,
+        },
+      })
+    },
+    [dispatch],
+  )
 
   const priorityValue = (
     priority: string,
@@ -196,78 +177,118 @@ export default function TaskApp(
     return 1
   }
 
-  const sortedTasks = [
-    ...searchedTasks,
-  ]
+  const sortedTasks = useMemo(() => {
+    const filteredTasks =
+      filter === 'active'
+        ? tasks.filter(
+            (task) => !task.completed,
+          )
+        : filter === 'completed'
+          ? tasks.filter(
+              (task) => task.completed,
+            )
+          : tasks
 
-  if (sortOrder === 'priority-high') {
-    sortedTasks.sort(
-      (a, b) =>
-        priorityValue(
-          b.priority,
-        ) -
-        priorityValue(
-          a.priority,
-        ),
-    )
-  } else if (
-    sortOrder === 'priority-low'
-  ) {
-    sortedTasks.sort(
-      (a, b) =>
-        priorityValue(
-          a.priority,
-        ) -
-        priorityValue(
-          b.priority,
-        ),
-    )
-  } else if (
-    sortOrder === 'alphabetical'
-  ) {
-    sortedTasks.sort((a, b) =>
-      a.title
-        .toLowerCase()
-        .localeCompare(
-          b.title.toLowerCase(),
-        ),
-    )
-  } else if (
-    sortOrder === 'due-date'
-  ) {
-    sortedTasks.sort((a, b) => {
-      if (
-        !a.dueDate &&
-        !b.dueDate
-      ) {
-        return 0
-      }
+    const categoryFilteredTasks =
+      selectedCategory === 'all'
+        ? filteredTasks
+        : filteredTasks.filter(
+            (task) =>
+              (task.category ??
+                'General') ===
+              selectedCategory,
+          )
 
-      if (!a.dueDate) {
-        return 1
-      }
+    const searchedTasks =
+      debouncedSearchText.trim() === ''
+        ? categoryFilteredTasks
+        : categoryFilteredTasks.filter(
+            (task) =>
+              task.title
+                .toLowerCase()
+                .includes(
+                  debouncedSearchText.toLowerCase(),
+                ) ||
+              task.description
+                .toLowerCase()
+                .includes(
+                  debouncedSearchText.toLowerCase(),
+                ),
+          )
 
-      if (!b.dueDate) {
-        return -1
-      }
+    const result = [...searchedTasks]
 
-      return (
-        new Date(
-          a.dueDate,
-        ).getTime() -
-        new Date(
-          b.dueDate,
-        ).getTime()
+    if (sortOrder === 'priority-high') {
+      result.sort(
+        (a, b) =>
+          priorityValue(
+            b.priority,
+          ) -
+          priorityValue(
+            a.priority,
+          ),
       )
-    })
-  }
+    } else if (
+      sortOrder === 'priority-low'
+    ) {
+      result.sort(
+        (a, b) =>
+          priorityValue(
+            a.priority,
+          ) -
+          priorityValue(
+            b.priority,
+          ),
+      )
+    } else if (
+      sortOrder === 'alphabetical'
+    ) {
+      result.sort((a, b) =>
+        a.title
+          .toLowerCase()
+          .localeCompare(
+            b.title.toLowerCase(),
+          ),
+      )
+    } else if (
+      sortOrder === 'due-date'
+    ) {
+      result.sort((a, b) => {
+        if (
+          !a.dueDate &&
+          !b.dueDate
+        ) {
+          return 0
+        }
+        if (!a.dueDate) return 1
+        if (!b.dueDate) return -1
+
+        return (
+          new Date(
+            a.dueDate,
+          ).getTime() -
+          new Date(
+            b.dueDate,
+          ).getTime()
+        )
+      })
+    }
+
+    return result
+  }, [
+    tasks,
+    filter,
+    selectedCategory,
+    debouncedSearchText,
+    sortOrder,
+  ])
 
   let taskCountText = ''
 
-  if (props.showFilterBar) {
+  if (showFilterBar) {
     taskCountText = `Showing ${sortedTasks.length} of ${tasks.length} tasks`
   } else if (
-    props.countFormat ===
+    countFormat ===
     'completed'
   ) {
     taskCountText = `${completedTasks} of ${tasks.length} completed`
@@ -279,13 +300,13 @@ export default function TaskApp(
     <main data-theme={theme}>
       <ThemeToggle />
 
-      {props.showForm && (
+      {showForm && (
         <TaskForm
           onAddTask={handleAddTask}
         />
       )}
 
-      {props.showFilterBar && (
+      {showFilterBar && (
         <FilterBar
           filter={filter}
           sortOrder={sortOrder}
@@ -318,7 +339,7 @@ export default function TaskApp(
         </div>
       )}
 
-      {props.showStatsPanel && (
+      {showStatsPanel && (
         <StatsPanel
           total={tasks.length}
           completed={completedTasks}
@@ -357,7 +378,7 @@ export default function TaskApp(
             handleToggleTask
           }
           onDelete={
-            props.onDelete
+            onDelete
               ? handleDeleteTask
               : undefined
           }

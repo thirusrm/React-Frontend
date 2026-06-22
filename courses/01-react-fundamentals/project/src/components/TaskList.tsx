@@ -1,3 +1,4 @@
+import React from 'react'
 import TaskCard from './TaskCard'
 
 export interface Task {
@@ -57,7 +58,9 @@ const HARDCODED_TASKS: Task[] = [
   },
 ]
 
-export default function TaskList(props: TaskListProps) {
+function TaskList(
+  props: TaskListProps,
+) {
   const taskList =
     props.tasks ?? HARDCODED_TASKS
 
@@ -79,6 +82,7 @@ export default function TaskList(props: TaskListProps) {
             priority={task.priority}
             category={task.category}
             tags={task.tags}
+            dueDate={task.dueDate}
             completed={task.completed}
             onToggle={props.onToggle}
             onDelete={props.onDelete}
@@ -95,3 +99,5 @@ export default function TaskList(props: TaskListProps) {
     </>
   )
 }
+
+export default React.memo(TaskList)
