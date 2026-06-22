@@ -9,6 +9,7 @@ import TaskForm from './TaskForm'
 import TaskList, { type Task } from './TaskList'
 import StatsPanel from './StatsPanel'
 import ThemeToggle from './ThemeToggle'
+import ErrorBoundary from './ErrorBoundary'
 import { useTheme } from '../contexts/ThemeContext'
 import {
   ADD_TASK,
@@ -371,25 +372,27 @@ export default function TaskApp(
           </div>
         </>
       ) : (
-        <TaskList
-          tasks={sortedTasks}
-          countText={taskCountText}
-          onToggle={
-            handleToggleTask
-          }
-          onDelete={
-            onDelete
-              ? handleDeleteTask
-              : undefined
-          }
-          onUpdateTask={
-            handleUpdateTask
-          }
-          editingId={editingId}
-          setEditingId={
-            setEditingId
-          }
-        />
+        <ErrorBoundary>
+          <TaskList
+            tasks={sortedTasks}
+            countText={taskCountText}
+            onToggle={
+              handleToggleTask
+            }
+            onDelete={
+              onDelete
+                ? handleDeleteTask
+                : undefined
+            }
+            onUpdateTask={
+              handleUpdateTask
+            }
+            editingId={editingId}
+            setEditingId={
+              setEditingId
+            }
+          />
+        </ErrorBoundary>
       )}
     </main>
   )
