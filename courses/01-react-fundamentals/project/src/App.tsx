@@ -1,5 +1,4 @@
 import './App.css'
-import react from 'react'
 import {
   BrowserRouter,
   Routes,
@@ -11,6 +10,7 @@ import TaskApp from './components/TaskApp'
 import TaskDetailPage from './components/TaskDetailPage'
 import FetchDemoView from './components/FetchDemoView'
 import { ThemeProvider } from './contexts/ThemeContext'
+import useLocalStorage from './hooks/useLocalStorage'
 import type { Task } from './components/TaskList'
 
 const INITIAL_TASKS: Task[] = [
@@ -53,33 +53,10 @@ const INITIAL_TASKS: Task[] = [
 
 function AppContent() {
   const [tasks, setTasks] =
-    react.useState<Task[]>(INITIAL_TASKS)
-
-  react.useEffect(() => {
-    try {
-      const savedTasks =
-        localStorage.getItem(
-          'task-app-tasks',
-        )
-
-      if (savedTasks) {
-        const parsedTasks = JSON.parse(
-          savedTasks,
-        ) as Task[]
-
-        setTasks(parsedTasks)
-      }
-    } catch {
-      setTasks(INITIAL_TASKS)
-    }
-  }, [])
-
-  react.useEffect(() => {
-    localStorage.setItem(
+    useLocalStorage<Task[]>(
       'task-app-tasks',
-      JSON.stringify(tasks),
+      INITIAL_TASKS,
     )
-  }, [tasks])
 
   const handleDelete = (
     id: string | number,

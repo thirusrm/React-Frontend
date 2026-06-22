@@ -1,9 +1,8 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
 } from 'react'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 type Theme = 'light' | 'dark'
 
@@ -23,25 +22,10 @@ export function ThemeProvider({
   children: React.ReactNode
 }) {
   const [theme, setTheme] =
-    useState<Theme>('light')
-
-  useEffect(() => {
-    const savedTheme =
-      localStorage.getItem(
-        'task-app-theme',
-      ) as Theme | null
-
-    if (savedTheme) {
-      setTheme(savedTheme)
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem(
+    useLocalStorage<Theme>(
       'task-app-theme',
-      theme,
+      'light',
     )
-  }, [theme])
 
   const toggleTheme = () => {
     setTheme((prev) =>
