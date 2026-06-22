@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useState } from 'react'
+import react from 'react'
 import {
   BrowserRouter,
   Routes,
@@ -53,9 +53,9 @@ const INITIAL_TASKS: Task[] = [
 
 function AppContent() {
   const [tasks, setTasks] =
-    useState<Task[]>(INITIAL_TASKS)
+    react.useState<Task[]>(INITIAL_TASKS)
 
-  useEffect(() => {
+  react.useEffect(() => {
     try {
       const savedTasks =
         localStorage.getItem(
@@ -74,7 +74,7 @@ function AppContent() {
     }
   }, [])
 
-  useEffect(() => {
+  react.useEffect(() => {
     localStorage.setItem(
       'task-app-tasks',
       JSON.stringify(tasks),

@@ -4,6 +4,9 @@ import FilterBar from './FilterBar'
 import TaskForm from './TaskForm'
 import TaskList, { type Task } from './TaskList'
 import StatsPanel from './StatsPanel'
+import ThemeToggle from './ThemeToggle'
+import { useTheme } from '../contexts/ThemeContext'
+
 
 interface TaskAppProps {
   tasks?: Task[]
@@ -36,6 +39,8 @@ export default function TaskApp(
   props: TaskAppProps,
 ) {
   const tasks = props.tasks ?? []
+
+  const { theme } = useTheme()
 
   const [filter, setFilter] =
     useState<FilterType>('all')
@@ -287,7 +292,9 @@ export default function TaskApp(
   }
 
   return (
-    <main>
+    <main data-theme={theme}>
+      <ThemeToggle />
+
       {props.showForm && (
         <TaskForm
           onAddTask={handleAddTask}

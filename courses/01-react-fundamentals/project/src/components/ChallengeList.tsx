@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useContext } from 'react'
-import { ThemeContext } from '../contexts/ThemeContext'
+import { useTheme } from '../contexts/ThemeContext'
 
 const challenges = [
   { id: '01-static-task-display', name: 'Static Task Display', route: '/challenge/01-static-task-display' },
@@ -29,16 +28,34 @@ const challenges = [
 ]
 
 export default function ChallengeList() {
-  const themeContext = useContext(ThemeContext)
+  const { theme } = useTheme()
+
   return (
-    <div style={{ padding: '1rem' }} data-theme={themeContext?.theme}>
+    <div
+      style={{ padding: '1rem' }}
+      data-theme={theme}
+    >
       <h2>Challenges</h2>
-      <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0' }}>
+
+      <ul
+        style={{
+          listStyle: 'none',
+          padding: 0,
+          margin: '1rem 0',
+        }}
+      >
         {challenges.map((c) => (
-          <li key={c.id} style={{ marginBottom: '0.75rem' }}>
+          <li
+            key={c.id}
+            style={{
+              marginBottom: '0.75rem',
+            }}
+          >
             <span>{c.name}</span>
             {' — '}
-            <Link to={c.route}>View Output</Link>
+            <Link to={c.route}>
+              View Output
+            </Link>
           </li>
         ))}
       </ul>
