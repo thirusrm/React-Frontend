@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
-import type { Dispatch, SetStateAction } from 'react'
 import FilterBar from './FilterBar'
 import TaskForm from './TaskForm'
 import TaskList, { type Task } from './TaskList'
 import StatsPanel from './StatsPanel'
 import ThemeToggle from './ThemeToggle'
 import { useTheme } from '../contexts/ThemeContext'
+import {
+  ADD_TASK,
+  UPDATE_TASK,
+  DELETE_TASK,
+  TOGGLE_TASK,
+} from '../reducers/taskReducer'
 
 
 interface TaskAppProps {
   tasks?: Task[]
-  setTasks?: Dispatch<SetStateAction<Task[]>>
   dispatch?: (action: {
     type: string
     payload?: unknown
@@ -107,61 +111,41 @@ export default function TaskApp(
       dueDate: newTask.dueDate,
     }
 
-    if (props.setTasks) {
-      props.setTasks((previousTasks) => [
-        ...previousTasks,
-        taskWithDefaults,
-      ])
-    }
+    props.dispatch?.({
+      type: ADD_TASK,
+      payload: taskWithDefaults,
+    })
   }
 
   const handleToggleTask = (
     taskId: string | number,
   ) => {
-    if (props.setTasks) {
-      props.setTasks((previousTasks) =>
-        previousTasks.map((task) =>
-          task.id === taskId
-            ? {
-                ...task,
-                completed:
-                  !task.completed,
-              }
-            : task,
-        ),
-      )
-    }
+    props.dispatch?.({
+      type: TOGGLE_TASK,
+      payload: taskId,
+    })
   }
 
   const handleDeleteTask = (
     taskId: string | number,
   ) => {
-    if (props.setTasks) {
-      props.setTasks((previousTasks) =>
-        previousTasks.filter(
-          (task) =>
-            task.id !== taskId,
-        ),
-      )
-    }
+    props.dispatch?.({
+      type: DELETE_TASK,
+      payload: taskId,
+    })
   }
 
   const handleUpdateTask = (
     taskId: string | number,
     updates: Partial<Task>,
   ) => {
-    if (props.setTasks) {
-      props.setTasks((previousTasks) =>
-        previousTasks.map((task) =>
-          task.id === taskId
-            ? {
-                ...task,
-                ...updates,
-              }
-            : task,
-        ),
-      )
-    }
+    props.dispatch?.({
+      type: UPDATE_TASK,
+      payload: {
+        id: taskId,
+        updates,
+      },
+    })
   }
 
   const filteredTasks =
