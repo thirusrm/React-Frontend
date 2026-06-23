@@ -56,6 +56,7 @@ export default function TaskApp(
     showFilterBar,
     showStatsPanel,
     onDelete,
+    linkToTaskDetail,
   } = props
 
   const tasks = taskProps
@@ -390,6 +391,9 @@ export default function TaskApp(
             editingId={editingId}
             setEditingId={
               setEditingId
+            }
+            linkToTaskDetail={
+              linkToTaskDetail
             }
           />
         </ErrorBoundary>

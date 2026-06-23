@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 interface TaskCardProps {
   id?: string | number
@@ -24,6 +25,7 @@ interface TaskCardProps {
   setEditingId?: (
     id: string | number | null,
   ) => void
+  linkToTaskDetail?: boolean
 }
 
 function TaskCard({
@@ -41,6 +43,7 @@ function TaskCard({
   onUpdateTask,
   isEditing,
   setEditingId,
+  linkToTaskDetail,
 }: TaskCardProps) {
   const currentId = taskId ?? id
 
@@ -209,7 +212,15 @@ function TaskCard({
             : 'none',
         }}
       >
-        {title}
+        {linkToTaskDetail ? (
+          <Link
+            to={`/challenge/21-react-router/task/${currentId}`}
+          >
+            {title}
+          </Link>
+        ) : (
+          title
+        )}
       </h2>
 
       <p

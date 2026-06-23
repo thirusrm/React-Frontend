@@ -93,6 +93,9 @@ function TaskList(
             setEditingId={
               props.setEditingId
             }
+            linkToTaskDetail={
+              props.linkToTaskDetail
+            }
           />
         ))}
       </section>
