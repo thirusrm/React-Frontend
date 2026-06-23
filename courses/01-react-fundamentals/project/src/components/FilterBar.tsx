@@ -1,3 +1,8 @@
+import {
+  useEffect,
+  useRef,
+} from 'react'
+
 interface FilterBarProps {
   filter: 'all' | 'active' | 'completed'
   sortOrder?: string
@@ -25,6 +30,13 @@ export default function FilterBar({
   onSearchChange = () => {},
   onClearSearch = () => {},
 }: FilterBarProps) {
+  const searchInputRef =
+    useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    searchInputRef.current?.focus()
+  }, [])
+
   return (
     <div id="filter-bar">
       <button
@@ -50,6 +62,7 @@ export default function FilterBar({
 
       <input
         id="search-input"
+        ref={searchInputRef}
         type="text"
         value={searchText}
         placeholder="Search tasks..."
