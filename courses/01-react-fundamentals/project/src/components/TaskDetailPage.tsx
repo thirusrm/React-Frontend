@@ -2,65 +2,70 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom'
-
 import type { Task } from './TaskList'
 
 export default function TaskDetailPage() {
   const { id } = useParams()
 
-  const navigate = useNavigate()
+  const navigate =
+    useNavigate()
 
-  const storedTasks =
+  const stored =
     localStorage.getItem(
-      'task-app-tasks',
+      'task-app-tasks'
     )
 
-  const tasks: Task[] =
-    storedTasks
-      ? JSON.parse(storedTasks)
-      : []
+  const tasks: Task[] = stored
+    ? JSON.parse(stored)
+    : []
 
   const task = tasks.find(
-    (item) =>
-      String(item.id) === String(id),
+    (t) => String(t.id) === id
   )
+
+  if (!task) {
+    return (
+      <div id="task-detail-page">
+        <h2>Task not found</h2>
+
+        <button
+          id="task-detail-back"
+          onClick={() =>
+            navigate(
+              '/challenge/21-react-router'
+            )
+          }
+        >
+          Back to list
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div id="task-detail-page">
+      <h1>{task.title}</h1>
+
+      <p>
+        {task.description}
+      </p>
+
+      <p>
+        Priority:
+        {' '}
+        {task.priority}
+      </p>
+
       <button
         id="task-detail-back"
         onClick={() =>
           navigate(
-            '/challenge/21-react-router',
+            '/challenge/21-react-router'
           )
         }
       >
         Back to list
       </button>
-
-      {!task ? (
-        <p>Task not found</p>
-      ) : (
-        <>
-          <h1>{task.title}</h1>
-
-          <p>
-            {task.description}
-          </p>
-
-          <p>
-            Priority:{' '}
-            {task.priority}
-          </p>
-
-          <p>
-            Status:{' '}
-            {task.completed
-              ? 'Completed'
-              : 'Active'}
-          </p>
-        </>
-      )}
     </div>
   )
 }

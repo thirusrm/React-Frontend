@@ -1,106 +1,92 @@
-import React from 'react'
 import TaskCard from './TaskCard'
-
 export interface Task {
   id: string | number
   title: string
   description: string
   priority: string
   completed: boolean
-  category?: string
-  tags?: string[]
-  dueDate?: string | number
+  category: string
+  tags: string[]
+  dueDate?: string
+  
 }
-
 interface TaskListProps {
   tasks?: Task[]
+  linkToTaskDetail?: boolean
   countText?: string
-  onToggle?: (id: string | number) => void
-  onDelete?: (id: string | number) => void
+  onToggle?: (
+    id: string | number
+  ) => void
+  onDelete?: (
+    id: string | number
+  ) => void
   onUpdateTask?: (
     id: string | number,
-    updates: Partial<Task>,
+    updates: {
+      title: string
+      description: string
+      priority: string
+    }
   ) => void
   editingId?: string | number | null
   setEditingId?: (
-    id: string | number | null,
+    id: string | number | null
   ) => void
-  linkToTaskDetail?: boolean
 }
-
 const HARDCODED_TASKS: Task[] = [
-  {
-    id: 1,
-    title: 'Task One',
-    description: 'First hardcoded task',
-    priority: 'High',
-    completed: false,
-    category: 'General',
-    tags: [],
-  },
-  {
-    id: 2,
-    title: 'Task Two',
-    description: 'Second hardcoded task',
-    priority: 'Medium',
-    completed: false,
-    category: 'Work',
-    tags: ['office'],
-  },
-  {
-    id: 3,
-    title: 'Task Three',
-    description: 'Third hardcoded task',
-    priority: 'Low',
-    completed: false,
-    category: 'Personal',
-    tags: ['home'],
-  },
+  {id: 1,title: 'Task One',description:'First hardcoded task',priority: 'High',completed: false,category: 'Work',tags: ['important'],dueDate: '2026-06-25'},
+  {id: 2,title: 'Task Two',description:'Second hardcoded task',priority: 'Medium',completed: false,category: 'Personal',tags: ['home'],dueDate: '2026-06-25'},
+  {id: 3,title: 'Task Three',description:'Third hardcoded task',priority: 'Low',completed: false,category: 'General',tags: ['misc'],dueDate: '2026-06-25'},
 ]
-
-function TaskList(
-  props: TaskListProps,
-) {
-  const taskList =
-    props.tasks ?? HARDCODED_TASKS
-
+export default function TaskList({tasks= HARDCODED_TASKS,countText,onToggle,onDelete,onUpdateTask,editingId,setEditingId,linkToTaskDetail,
+}: TaskListProps) {
+  const list =
+    tasks ?? HARDCODED_TASKS
   return (
     <>
-      {props.countText && (
-        <div id="task-count">
-          {props.countText}
-        </div>
-      )}
-
+      <div id="task-count">
+        {countText}
+      </div>
       <section id="task-list">
-        {taskList.map((task) => (
+        {list.map((task) => (
           <TaskCard
             key={task.id}
-            taskId={task.id}
+            id={task.id}
             title={task.title}
-            description={task.description}
-            priority={task.priority}
-            category={task.category}
+            description={
+              task.description
+            }
+            priority={
+              task.priority
+            }
+            completed={
+              task.completed
+            }
+            category={
+              task.category
+            }
             tags={task.tags}
-            dueDate={task.dueDate}
-            completed={task.completed}
-            onToggle={props.onToggle}
-            onDelete={props.onDelete}
-            onUpdateTask={props.onUpdateTask}
-            isEditing={
-              props.editingId === task.id
+            dueDate={
+              task.dueDate
+            }
+            linkToTaskDetail={linkToTaskDetail}
+            onToggle={() =>
+              onToggle?.(task.id)
+            }
+            onDelete={onDelete}
+            onUpdateTask={
+              onUpdateTask
+            }
+            editingId={
+              editingId
             }
             setEditingId={
-              props.setEditingId
+              setEditingId
             }
-            linkToTaskDetail={
-              props.linkToTaskDetail
-            }
+            linkToTaskDetail={linkToTaskDetail}
           />
         ))}
       </section>
     </>
   )
 }
-
-export default React.memo(TaskList)

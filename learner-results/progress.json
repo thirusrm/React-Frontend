@@ -1,23 +1,23 @@
 {
-  "lastUpdated": "2026-06-23T04:31:01.148Z",
+  "lastUpdated": "2026-06-24T09:29:29.146Z",
   "pathway": {
     "name": "Modern React Engineer",
     "version": "1.0.0",
-    "overallScore": 27.2,
-    "completionPercentage": 41.5,
+    "overallScore": 27.4,
+    "completionPercentage": 43.4,
     "badgeLevel": "none",
     "totalChallenges": 53,
-    "completedChallenges": 22
+    "completedChallenges": 23
   },
   "courses": {
     "01-react-fundamentals": {
       "courseId": "01-react-fundamentals",
       "courseName": "React Fundamentals",
-      "averageScore": 82.4,
-      "completionPercentage": 95.7,
+      "averageScore": 83,
+      "completionPercentage": 100,
       "badgeLevel": "silver",
       "totalChallenges": 23,
-      "completedChallenges": 22,
+      "completedChallenges": 23,
       "challenges": {
         "01-static-task-display": {
           "challengeId": "01-static-task-display",
@@ -322,16 +322,16 @@
         "21-react-router": {
           "challengeId": "21-react-router",
           "challengeName": "React Router - Routing and Navigation",
-          "passed": false,
-          "score": 70,
-          "lastRun": "2026-06-23T04:19:47.432Z",
+          "passed": true,
+          "score": 82.45,
+          "lastRun": "2026-06-24T09:29:09.037Z",
           "scores": {
             "functionalTests": 100,
             "codeQuality": 100,
             "architecture": 100,
             "bestPractices": 100,
             "e2eTests": 0,
-            "aiReview": 0
+            "aiReview": 83
           }
         },
         "22-data-fetching": {
@@ -354,7 +354,7 @@
           "challengeName": "useRef - Focus Management",
           "passed": true,
           "score": 83.2,
-          "lastRun": "2026-06-23T04:30:41.157Z",
+          "lastRun": "2026-06-24T04:15:26.448Z",
           "scores": {
             "functionalTests": 100,
             "codeQuality": 100,
