@@ -1,11 +1,11 @@
 {
   "courseId": "02-redux-rtk-query",
   "courseName": "Redux & RTK Query",
-  "lastUpdated": "2026-07-11T10:27:51.259Z",
+  "lastUpdated": "2026-07-14T04:39:07.561Z",
   "totalChallenges": 13,
-  "completedChallenges": 5,
-  "averageScore": 81.8,
-  "completionPercentage": 38.5,
+  "completedChallenges": 6,
+  "averageScore": 81.7,
+  "completionPercentage": 46.2,
   "badgeLevel": "none",
   "challengeResults": [
     {
@@ -37,6 +37,12 @@
       "challengeName": "Async Logic with createAsyncThunk",
       "score": 83.65,
       "passed": true
+    },
+    {
+      "challengeId": "06-rtk-query-setup",
+      "challengeName": "RTK Query Setup and API Slice",
+      "score": 81.4,
+      "passed": true
     }
   ],
   "skillStrengths": [
@@ -44,7 +50,8 @@
     "First Slice with createSlice",
     "Reading and Dispatching in Components",
     "Multiple Slices in the Store",
-    "Async Logic with createAsyncThunk"
+    "Async Logic with createAsyncThunk",
+    "RTK Query Setup and API Slice"
   ],
   "improvementAreas": []
 }
