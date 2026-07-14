@@ -1,59 +1,72 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { mockApi } from './mockServer';
 
 export interface User {
   id: string;
   name: string;
   email: string;
 }
-export interface Post {
-  id: string;
-  title: string;
-  content: string;
-  userId: string;
-}
 
-export type TagType = 'User' | 'Post';
-const tagTypes: TagType[] = ['User', 'Post'];
+export interface NewUser {
+  name: string;
+  email: string;
+}
 
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
-  tagTypes,
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/',
+  }),
+  tagTypes: ['User'],
   endpoints: (builder) => ({
     getUsers: builder.query<User[], void>({
-      query: () => '/users',
+      queryFn: async () => {
+        try {
+          const users = await mockApi.getUsers();
+          return { data: users };
+        } catch (error: unknown) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error:
+                error instanceof Error
+                  ? error.message
+                  : 'Failed to fetch users',
+            },
+          };
+        }
+      },
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'User' as const, id })),
-              { type: 'User' as const, id: 'LIST' },
+              ...result.map(({ id }) => ({
+                type: 'User' as const,
+                id,
+              })),
+              { type: 'User', id: 'LIST' },
             ]
-          : [{ type: 'User' as const, id: 'LIST' }],
+          : [{ type: 'User', id: 'LIST' }],
     }),
-    addUser: builder.mutation<User, Partial<User>>({
-      query: (body) => ({ url: '/users', method: 'POST', body }),
+    addUser: builder.mutation<User, NewUser>({
+      queryFn: async (newUser) => {
+        try {
+          const createdUser = await mockApi.addUser(newUser);
+          return { data: createdUser };
+        } catch (error: unknown) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error:
+                error instanceof Error
+                  ? error.message
+                  : 'Failed to add user',
+            },
+          };
+        }
+      },
       invalidatesTags: [{ type: 'User', id: 'LIST' }],
-    }),
-    getPosts: builder.query<Post[], void>({
-      query: () => '/posts',
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: 'Post' as const, id })),
-              { type: 'Post' as const, id: 'LIST' },
-            ]
-          : [{ type: 'Post' as const, id: 'LIST' }],
-    }),
-    addPost: builder.mutation<Post, Partial<Post>>({
-      query: (body) => ({ url: '/posts', method: 'POST', body }),
-      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
     }),
   }),
 });
 
-export const {
-  useGetUsersQuery,
-  useAddUserMutation,
-  useGetPostsQuery,
-  useAddPostMutation,
-} = apiSlice;
+export const { useGetUsersQuery, useAddUserMutation } = apiSlice;

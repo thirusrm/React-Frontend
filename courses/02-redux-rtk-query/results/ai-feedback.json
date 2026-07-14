@@ -203,5 +203,30 @@
       "overall": "The code meets most of the functional requirements and demonstrates a good understanding of RTK Query's tag system. However, there are some areas for improvement, such as adding more specific error handling and extracting reusable code.",
       "requirementCompliance": 90
     }
+  },
+  {
+    "challengeId": "09-mutations",
+    "challengeName": "Mutations with useMutation",
+    "aiReview": {
+      "challengeId": "09-mutations",
+      "timestamp": "2026-07-14T05:18:00.476Z",
+      "score": 77,
+      "feedback": [],
+      "strengths": [
+        "The code is generally well-structured and readable.",
+        "The code generally follows RTK Query best practices."
+      ],
+      "improvements": [
+        "The `addUser` mutation in `apiSlice.ts` should return a `Post` object instead of a `User` object.",
+        "The `AddPostForm` component in `AddPostForm.tsx` should use the `useAddPostMutation` hook instead of the `useAddUserMutation` hook.",
+        "The `src/components/ChallengeList.tsx` file is not referenced in the review task.",
+        "The `src/components/PostsWithFilters.tsx` file is a stub and should be removed or implemented correctly.",
+        "The `src/components/PostsList.tsx` file is a stub and should be removed or implemented correctly."
+      ],
+      "readability": 80,
+      "maintainability": 70,
+      "overall": "The code meets most functional requirements, but there are a few areas for improvement. The code is generally well-structured and readable, but it could be improved for maintainability and extensibility.",
+      "requirementCompliance": 80
+    }
   }
 ]
