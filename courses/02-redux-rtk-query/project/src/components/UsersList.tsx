@@ -1,14 +1,15 @@
-import { useQueryHook } from "../hooks/useQueryHook";
+import { useQueryHook } from "../api/useQueryHook";
+import ErrorDisplay from "./ErrorDisplay";
 
 const UsersList = () => {
-  const { data, isLoading, error } = useQueryHook();
+  const { data, isLoading, isError, error, refetch } = useQueryHook();
 
   if (isLoading) {
-    return <div data-testid="users-loading">Loading...</div>;
+    return <div data-testid="users-loading">Loading users...</div>;
   }
 
-  if (error) {
-    return <div data-testid="users-error">Error loading users.</div>;
+  if (isError) {
+    return <ErrorDisplay error={error} onRetry={refetch} />;
   }
 
   return (
